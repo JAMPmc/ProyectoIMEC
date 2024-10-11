@@ -6,6 +6,7 @@ from ttkthemes import ThemedTk
 import matplotlib.pyplot as plt
 import pandas as pd
 import random
+from turtle import RawTurtle, TurtleScreen
 
 # Crear ventana
 ventana = ThemedTk(theme="arc")
@@ -47,7 +48,7 @@ def Manipular_Resultado():
         LabelResultado.grid(column=2, row= 1, sticky="w", padx=50, pady=15)
         print("Se crea la etiqueta")
     else:
-        LabelResultado.config(text=f"El área de tu círculo es {AreaFormateada}")
+        LabelResultado.config(text=f"El área de tu {poligonoNombre} es {AreaFormateada}")
         print("Se modifica la etiqueta")
         
 def Area_Circulo():
@@ -277,14 +278,19 @@ def op_realizar():
     operando2 = TextoOP.cget("text")
     if operacion == "/":
         nuevoTexto = float(operando1) / float(operando2)
+        
     elif operacion == "*":
         nuevoTexto = float(operando1) * float(operando2)
+        
     elif operacion == "+":
         nuevoTexto = float(operando1) + float(operando2)
+        
     elif operacion == "-":
         nuevoTexto = float(operando1) - float(operando2)
+        
     if nuevoTexto.is_integer():
         nuevoTexto=int(nuevoTexto)
+        
     TextoOP.config(text=str(nuevoTexto))
     print(TextoOP.cget("text"))
     
@@ -363,7 +369,7 @@ ValorGauge = 0
 def Cambiar_Aguja():
     global ValorGauge
     print("Cambiar_Aguja")
-    ValorGauge = (float(SpinboxGauge.get())-10)*179/50
+    ValorGauge = (float(SpinboxGauge.get())-10)*179/60
     gauge.itemconfig(aguja_id, start=179 - ValorGauge)
 
 # Definir función y variables para graficar datos
@@ -485,9 +491,11 @@ gauge = UPP.Canvas(tab3, width=500, height=400)
 PosGauge = 70, 50, 350, 350
 ValorGauge=0
 gauge.create_arc(PosGauge, start=0, extent=180, fill="white",  width=3)
+
 gauge.create_arc(PosGauge, start=0, extent=50, fill="red", width=3)
 gauge.create_arc(PosGauge, start=130, extent=50, fill="yellow" ,  width=3)
 gauge.create_arc(72, 52, 348, 348, start=50, extent=80, fill="green", outline="green",  width=2)
+
 gauge.create_arc(PosGauge, start= 165, extent=1, width=3)
 gauge.create_arc(PosGauge, start= 135, extent=1, width=3)
 gauge.create_arc(PosGauge, start= 105, extent=1, width=3)
@@ -508,7 +516,6 @@ gauge.create_arc(110, 90, 310, 310, start= 1, extent=178, width=3, fill="white",
 
 aguja_id = gauge.create_arc(PosGauge, start= 179, extent=1, width=1, outline="red", fill="red")
 
-#ttk.Button(text="Cambiar posición", command=Cambiar_Aguja).pack(padx=5, pady= 5)
 
 SpinboxGauge= ttk.Spinbox(tab3, from_=10, to=70, increment=0.5, width=5, state="readonly", command=Cambiar_Aguja )
 
@@ -561,16 +568,16 @@ frame2.grid (column=1, row=0)
 frecu= ttk.Label (frame2, text= "Coloque la frecuencia de la categoría")
 frecu.grid (columnspan=2, row=0, padx=0, pady=2)
 
-frec1 = ttk.Label (frame2, text="Frecuencia ", width=10).grid (column=0, row=3, padx=0, pady=10)
+frec1 = ttk.Label (frame2, text="Frecuencia 1", width=10).grid (column=0, row=3, padx=0, pady=10)
 ingre_fre1 = ttk.Entry (frame2, width=20)
 ingre_fre1.grid (column =1, row=3)
-frec2 = ttk.Label (frame2, text="Frecuencia ", width=10).grid (column=0, row=4, padx=0, pady=10)
+frec2 = ttk.Label (frame2, text="Frecuencia 2", width=10).grid (column=0, row=4, padx=0, pady=10)
 ingre_fre2 = ttk.Entry (frame2, width=20)
 ingre_fre2.grid (column =1, row=4)
-frec3 = ttk.Label (frame2, text="Frecuencia ", width=10).grid (column=0, row=5, padx=0, pady=10)
+frec3 = ttk.Label (frame2, text="Frecuencia 3", width=10).grid (column=0, row=5, padx=0, pady=10)
 ingre_fre3 = ttk.Entry (frame2, width=20)
 ingre_fre3.grid (column =1, row=5)
-frec4 = ttk.Label (frame2, text="Frecuencia ", width=10).grid (column=0, row=6, padx=0, pady=10)
+frec4 = ttk.Label (frame2, text="Frecuencia 4", width=10).grid (column=0, row=6, padx=0, pady=10)
 ingre_fre4 = ttk.Entry (frame2, width=20)
 ingre_fre4.grid (column =1, row=6)
 
@@ -612,10 +619,27 @@ ttk.Label(tab5, text="231403094 No. de lista 11", font=("arial",15 ,"bold")).gri
 
 ttk.Label(tab5, image=Imagen2).grid(column=4, row=0, rowspan=2, sticky="nswe", padx=5)  
   
-#barrita= ttk.Progressbar(tab5, length=300, mode="indeterminate",)
-##barrita.pack()
-ttk.Button(tab5, text="PLACEHOLDER").grid(column=3, row=2, padx=5)
-ttk.Button(tab5, text="PLACEHOLDER").grid(column=3, row=3, padx=5)
+canvas = UPP.Canvas(tab5)
+canvas.grid(column=3, row=3, padx=5, sticky="nswe", rowspan=4, columnspan=2) #fill= expanción tanto horizontal como vertica
+
+#turtle 
+screen = TurtleScreen(canvas) # herramienta independiente para el dibujo
+turtle = RawTurtle(screen) # dibuja dentro de la canva creada 
+turtle.speed(5) # tiempo/velocidad del dibujo
+
+# Función para dibujar la estrella
+def dibujar_estrella():
+    turtle.clear()  # Limpiar cualquier dibujo anterior
+    for _ in range(5): #estrella de 5 picos
+        turtle.forward(100) #dirección hacia adelante dependiendo la dirección en la que la tortuga se mueve y los 100 es la distancia que tiene en px
+        turtle.right(144) #cuando la tortuga gira a la derecha dependiendo en no. de grados que en este caso son los 144°
+        
+# Crear botón para dibujar la estrella
+button_estrella = ttk.Button(tab5, 
+                            text="Dibujar Estrella", 
+                            command=dibujar_estrella)
+button_estrella.grid(column=3, row=2, padx=5)
+
 
 Imagen3= UPP.PhotoImage(file="./Tortuga.png")
 Imagen3 = Imagen3.subsample(3)
